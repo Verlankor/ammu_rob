@@ -9,7 +9,7 @@ CreateThread(function()
     Wait(1000)
     while true do
         StartRun()
-        Wait(5000000)
+        Wait(Config.Timer)
     end
 end)
 

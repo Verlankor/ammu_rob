@@ -18,3 +18,7 @@ dependencies {
   'qb-core',
   'qb-target'
 }
+
+escrow_ignore {
+  '*.lua',
+}
