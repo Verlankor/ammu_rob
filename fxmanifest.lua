@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 description 'QB-Ammu-Rob'
-version '1.0'
+version '1.1'
 
 shared_script 'config.lua'
 

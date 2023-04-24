@@ -7,9 +7,15 @@ RegisterNetEvent('Ammu_Rob:Start', function(pos, vehModel)
 			Wait(10)
 		end
 		local driver = CreatePed(26, "s_m_m_security_01", pos.x, pos.y, pos.z, 0.0, true, false)
+		SetModelAsNoLongerNeeded('s_m_m_security_01')
 		SetPedIntoVehicle(driver, veh, -1)
 		TaskVehicleDriveToCoordLongrange(driver, veh, vector3(28.71, -1110.68, 29.31), 10.0, 786603, 1.0)
+		
 		SetPedKeepTask(driver, true)
+		SetBlockingOfNonTemporaryEvents(driver, true)
+		SetEntityAsMissionEntity(driver)
+		SetEntityAsMissionEntity(veh)
+
 		Wait(1000)
         TriggerServerEvent('Ammu_Rob:VehicleReady', NetworkGetNetworkIdFromEntity(veh), NetworkGetNetworkIdFromEntity(driver))
 		Wait(5000)
@@ -29,8 +35,28 @@ end)
 exports['qb-target']:AddTargetModel({`burrito`}, {
 	options = {
 		{
-			action = function()
+			action = function(entity)
+				local breakDistance = false
+				RequestAnimDict('mp_car_bomb')
+				while not HasAnimDictLoaded('mp_car_bomb') do
+					Wait(0)
+				end
+				TaskPlayAnim(PlayerPedId(), 'mp_car_bomb', 'car_bomb_mechanic' ,1.0, 1.0, -1, 16, 0, false, false, false)
+				
+				CreateThread(function()
+					while lockpick do
+						Wait(250)
+						if #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(entity)) >= 20.0 then
+							breakDistance = true
+							break
+						end
+					end
+				end)
+				
+				local lockpicking = true
 				TriggerEvent('qb-lockpick:client:openLockpick', function(weWon)
+					lockpicking = false
+					if breakDistance then return end
 					if weWon then
 						TriggerServerEvent('Ammu_Rob:Loot')
 					else
