@@ -24,4 +24,4 @@ Config.Loot = {
 }
 
 --Time Between Deliveries
-Config.Timer = 3600 * 60
+Config.Timer = 3600 * 1
